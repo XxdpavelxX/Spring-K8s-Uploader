@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celonis-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: celonis-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: celonis-app
+    spec:
+      containers:
+      - name: celonis-app
+        image: celonis-app:1.0.1
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: celonis-app-data
+          mountPath: /data
+      volumes:
+      - name: celonis-app-data
+        persistentVolumeClaim:
+          claimName: celonis-app-pvc

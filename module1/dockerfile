@@ -1,0 +1,22 @@
+# Safe base image containing Java runtime
+FROM openjdk:8-jdk-alpine
+
+# Unnecessary, but can be useful for debugging.
+LABEL build_date="2024-04-2024"
+
+RUN addgroup -S celonisGroup && adduser -S celonisUser -G celonisGroup
+
+EXPOSE 8080
+
+WORKDIR /app
+
+COPY . /app
+
+RUN chown -R celonisUser:celonisGroup /app
+
+USER celonisUser
+
+RUN chmod +x ./gradlew
+
+# Run the application
+ENTRYPOINT ["./gradlew", "bootRun"]
